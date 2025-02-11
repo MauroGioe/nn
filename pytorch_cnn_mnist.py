@@ -11,7 +11,7 @@ from sklearn.model_selection import train_test_split
 torch.manual_seed(0)
 np.random.seed(0)
 
-df = pd.read_csv("./train.csv")
+df = pd.read_csv("./input/train.csv")
 
 y = df['label'].values
 X = df.drop(['label'],axis=1).values
