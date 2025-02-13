@@ -185,3 +185,17 @@ for epoch in range(num_epochs):
 evaluate(model, test_loader)
 
 #torch.save(model.state_dict(), "./gpt_pytorch_model_weights")
+model.load_state_dict(torch.load("./pytorch_model_weights"))
+
+def predict(model, input_loader):
+    with torch.no_grad():
+        class_predictions = []
+        for x,y in input_loader:
+            pred = model(x)
+            class_predictions.append( torch.max(pred, 1)[1].numpy())
+            #class_predictions.append( torch.max(pred, 1)[1].numpy()[0])
+        class_predictions = np.concatenate(class_predictions)
+        return class_predictions
+
+result = predict(model, test_loader)
+len(result)
