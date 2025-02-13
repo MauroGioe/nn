@@ -97,7 +97,7 @@ def validate(model, dataloader, criterion):
     accuracy = correct / total * 100
     return avg_loss, accuracy
 
-def evaluate(model):
+def evaluate(model, test_loader):
     correct = 0
     total = 0
     for test_imgs, test_labels in test_loader:
@@ -182,6 +182,6 @@ for epoch in range(num_epochs):
         print("Early stopping triggered")
         break
 
-evaluate(model)
+evaluate(model, test_loader)
 
 #torch.save(model.state_dict(), "./gpt_pytorch_model_weights")
