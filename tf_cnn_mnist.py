@@ -6,7 +6,8 @@ import matplotlib.pyplot as plt
 matplotlib.interactive(True)
 from sklearn.metrics import classification_report
 import seaborn as sns
-
+import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
 
 mnist = tf.keras.datasets.mnist
