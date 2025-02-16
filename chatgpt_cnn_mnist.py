@@ -9,6 +9,9 @@ import numpy as np
 torch.manual_seed(123)
 np.random.seed(123)
 
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+
 df = pd.read_csv("./input/train.csv")
 
 y = df['label'].values
@@ -22,16 +25,16 @@ X_test=X_test / 255.0
 X_valid=X_valid / 255.0
 
 
-torch_X_train = torch.from_numpy(X_train).type(torch.FloatTensor)
-torch_y_train = torch.from_numpy(y_train).type(torch.LongTensor)
+torch_X_train = torch.from_numpy(X_train).type(torch.FloatTensor).to(device)
+torch_y_train = torch.from_numpy(y_train).type(torch.LongTensor).to(device)
 
 # create feature and target tensor for test set.
-torch_X_test = torch.from_numpy(X_test).type(torch.FloatTensor)
-torch_y_test = torch.from_numpy(y_test).type(torch.LongTensor)
+torch_X_test = torch.from_numpy(X_test).type(torch.FloatTensor).to(device)
+torch_y_test = torch.from_numpy(y_test).type(torch.LongTensor).to(device)
 
 
-torch_X_valid = torch.from_numpy(X_valid).type(torch.FloatTensor)
-torch_y_valid = torch.from_numpy(y_valid).type(torch.LongTensor)
+torch_X_valid = torch.from_numpy(X_valid).type(torch.FloatTensor).to(device)
+torch_y_valid = torch.from_numpy(y_valid).type(torch.LongTensor).to(device)
 
 
 
@@ -158,7 +161,7 @@ class SimpleCNN(nn.Module):
 
 early_stopping = EarlyStopping(patience=3, min_delta=0.001)
 # Inizializza il modello, la loss function e l'ottimizzatore
-model = SimpleCNN()
+model = SimpleCNN().to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters())
 
@@ -192,8 +195,7 @@ def predict(model, input_loader):
         class_predictions = []
         for x,y in input_loader:
             pred = model(x)
-            class_predictions.append( torch.max(pred, 1)[1].numpy())
-            #class_predictions.append( torch.max(pred, 1)[1].numpy()[0])
+            class_predictions.append( torch.max(pred, 1)[1].cpu().numpy())
         class_predictions = np.concatenate(class_predictions)
         return class_predictions
 
