@@ -2,12 +2,14 @@ import torch
 import torch.optim as optim
 from torch.utils.data import DataLoader
 from torch import nn
+from torchvision import transforms
 import pandas as pd
 from sklearn.model_selection import train_test_split
 import torch.nn.functional as F
 import numpy as np
 torch.manual_seed(123)
 np.random.seed(123)
+
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -24,7 +26,26 @@ X_train=X_train / 255.0
 X_test=X_test / 255.0
 X_valid=X_valid / 255.0
 
+def data_augmentation_fun(X_train:np.ndarray)->torch.Tensor:
+    data_augmentation = transforms.Compose([
+    transforms.ToPILImage(),
+    transforms.RandomHorizontalFlip(),
+    transforms.RandomVerticalFlip(),
+    #transforms.RandomRotation((15, 345)),
+    transforms.RandomCrop([28, 28]),
+    transforms.ToTensor()
+    ])
 
+    list_tensor = []
+    for array in X_train:
+        list_tensor.append(data_augmentation(array.reshape((28,28))))
+
+    X_train = torch.stack(list_tensor)
+    X_train = X_train.to(device)
+    return X_train
+
+
+#torch_X_train = data_augmentation_fun(X_train)
 torch_X_train = torch.from_numpy(X_train).type(torch.FloatTensor).to(device)
 torch_y_train = torch.from_numpy(y_train).type(torch.LongTensor).to(device)
 
@@ -41,6 +62,10 @@ torch_y_valid = torch.from_numpy(y_valid).type(torch.LongTensor).to(device)
 torch_X_train = torch_X_train.view(-1, 1,28,28).float()
 torch_X_test = torch_X_test.view(-1,1,28,28).float()
 torch_X_valid = torch_X_valid.view(-1,1,28,28).float()
+
+
+
+
 
 train = torch.utils.data.TensorDataset(torch_X_train,torch_y_train)
 test = torch.utils.data.TensorDataset(torch_X_test,torch_y_test)
@@ -141,56 +166,66 @@ class EarlyStopping:
 # Definisci il modello (ad esempio, un semplice CNN)
 
 
-class SimpleCNN(nn.Module):
+class CNN(nn.Module):
     def __init__(self):
-        super(SimpleCNN, self).__init__()
-        self.conv1 = nn.Conv2d(1, 32, kernel_size=3)
-        self.conv2 = nn.Conv2d(32, 64, kernel_size=3)
-        self.fc1 = nn.Linear(1600, 128)  # Supponendo un'immagine 28x28
-        self.fc2 = nn.Linear(128, 10)  # 10 classi di output
+        super(CNN, self).__init__()
+        self.conv1 = nn.Conv2d(1, 32, kernel_size=5)
+        self.conv2 = nn.Conv2d(32, 32, kernel_size=5)
+        self.conv3 = nn.Conv2d(32, 64, kernel_size=5)
+        self.fc1 = nn.Linear(3 * 3 * 64, 256)
+        self.fc2 = nn.Linear(256, 10)
 
     def forward(self, x):
-        x = torch.relu(self.conv1(x))
-        x = torch.max_pool2d(x, 2)
-        x = torch.relu(self.conv2(x))
-        x = torch.max_pool2d(x, 2)
+        x = F.relu(self.conv1(x))
+        #print(f"SHAPE conv1: {x.shape}")
+        x = F.relu(F.max_pool2d(self.conv2(x), 2))#maxpooling divides last two dimensions by half
+        #print(f"SHAPE conv2: {x.shape}")
         x = F.dropout(x, p=0.2, training=self.training)
-        x = x.view(x.size(0), -1)  # Flatten
-        x = torch.relu(self.fc1(x))
+        x = F.relu(F.max_pool2d(self.conv3(x), 2))
+        x = F.dropout(x, p=0.2, training=self.training)
+        #print(f"SHAPE conv3: {x.shape}")
+        x = x.view(-1, 3 * 3 * 64) #flattening the tensor (batch size, output of previous layer)
+        #print(f"SHAPE flattten: {x.shape}")
+        #x = x.flatten()
+        x = F.relu(self.fc1(x))
+        x = F.dropout(x, training=self.training)
         x = self.fc2(x)
-        return x
+        return F.log_softmax(x, dim=1)
 
 
 early_stopping = EarlyStopping(patience=3, min_delta=0.001)
 # Inizializza il modello, la loss function e l'ottimizzatore
-model = SimpleCNN().to(device)
+model = CNN().to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters())
 
 scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2, verbose=True)
 # Numero di epoche di allenamento
-num_epochs = 10
+num_epochs = 20
 
-for epoch in range(num_epochs):
-    print(f"Epoch {epoch + 1}/{num_epochs}")
+def training(num_epochs, model, train_loader, val_loader, criterion, optimizer):
+    for epoch in range(num_epochs):
+        print(f"Epoch {epoch + 1}/{num_epochs}")
 
-    # Fase di allenamento
-    train_loss, train_accuracy = train_one_epoch(model, train_loader, criterion, optimizer)
-    print(f"Train Loss: {train_loss:.4f}, Train Accuracy: {train_accuracy:.2f}%")
+        # Fase di allenamento
+        train_loss, train_accuracy = train_one_epoch(model, train_loader, criterion, optimizer)
+        print(f"Train Loss: {train_loss:.4f}, Train Accuracy: {train_accuracy:.2f}%")
 
-    # Fase di validazione
-    val_loss, val_accuracy = validate(model, val_loader, criterion)
-    print(f"Validation Loss: {val_loss:.4f}, Validation Accuracy: {val_accuracy:.2f}%")
-    scheduler.step(val_loss)
-    early_stopping(val_loss, model)
-    if early_stopping.early_stop:
-        print("Early stopping triggered")
-        break
+        # Fase di validazione
+        val_loss, val_accuracy = validate(model, val_loader, criterion)
+        print(f"Validation Loss: {val_loss:.4f}, Validation Accuracy: {val_accuracy:.2f}%")
+        scheduler.step(val_loss)
+        early_stopping(val_loss, model)
+        if early_stopping.early_stop:
+            print("Early stopping triggered")
+            break
 
-evaluate(model, test_loader)
+training(num_epochs, model, train_loader, val_loader, criterion, optimizer)
 
 #torch.save(model.state_dict(), "./gpt_pytorch_model_weights")
 model.load_state_dict(torch.load("./gpt_pytorch_model_weights"))
+
+evaluate(model, test_loader)
 
 def predict(model, input_loader):
     with torch.no_grad():
