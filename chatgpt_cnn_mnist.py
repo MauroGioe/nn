@@ -19,8 +19,8 @@ df = pd.read_csv("./input/train.csv")
 y = df['label'].values
 X = df.drop(['label'],axis=1).values
 
-X_train, X_test, y_train, y_test= train_test_split(X, y, test_size=0.15)
-X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_size=0.15)
+X_train, X_test, y_train, y_test= train_test_split(X, y, test_size=0.10)
+X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_size=0.10)
 
 X_train=X_train / 255.0
 X_test=X_test / 255.0
