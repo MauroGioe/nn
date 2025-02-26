@@ -95,8 +95,8 @@ data_augmentation = transforms.Compose([
     transforms.RandomCrop([28, 28]),
     transforms.ToTensor(),
     ])
-train = MNISTDataset(X_train, y_train,  is_test=False, transforms=data_augmentation)
-#train = torch.utils.data.TensorDataset(torch_X_train,torch_y_train)
+#train = MNISTDataset(X_train, y_train,  is_test=False, transforms=data_augmentation)
+train = torch.utils.data.TensorDataset(torch_X_train,torch_y_train)
 test = torch.utils.data.TensorDataset(torch_X_test,torch_y_test)
 valid = torch.utils.data.TensorDataset(torch_X_valid,torch_y_valid)
 
@@ -230,7 +230,7 @@ optimizer = optim.Adam(model.parameters())
 
 scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2, verbose=True)
 # Numero di epoche di allenamento
-num_epochs = 20
+num_epochs = 30
 
 def training(num_epochs, model, train_loader, val_loader, criterion, optimizer):
     for epoch in range(num_epochs):
