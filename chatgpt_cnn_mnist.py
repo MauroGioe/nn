@@ -63,11 +63,40 @@ torch_X_train = torch_X_train.view(-1, 1,28,28).float()
 torch_X_test = torch_X_test.view(-1,1,28,28).float()
 torch_X_valid = torch_X_valid.view(-1,1,28,28).float()
 
+from torch.utils.data import Dataset
 
 
+class MNISTDataset(Dataset):
+    def __init__(self, X, y=None, is_test=False, transforms=None):
+        self.X = X
+        self.y = y
+        self.is_test = is_test
+        self.transforms = transforms
+
+    def __len__(self):
+        return len(self.X)
 
 
-train = torch.utils.data.TensorDataset(torch_X_train,torch_y_train)
+    def __getitem__(self, index):
+        image = self.X[index].reshape(28,28)
+
+        if self.transforms:
+            image = self.transforms(image)
+        if self.is_test:
+            return image
+        else:
+            return image.to(device), torch.from_numpy(np.array(self.y[index])).type(torch.LongTensor).to(device)
+
+data_augmentation = transforms.Compose([
+    transforms.ToPILImage(),
+    transforms.RandomHorizontalFlip(),
+    transforms.RandomVerticalFlip(),
+    #transforms.RandomRotation((15, 345)),
+    transforms.RandomCrop([28, 28]),
+    transforms.ToTensor(),
+    ])
+train = MNISTDataset(X_train, y_train,  is_test=False, transforms=data_augmentation)
+#train = torch.utils.data.TensorDataset(torch_X_train,torch_y_train)
 test = torch.utils.data.TensorDataset(torch_X_test,torch_y_test)
 valid = torch.utils.data.TensorDataset(torch_X_valid,torch_y_valid)
 

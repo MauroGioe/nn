@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="44c53d5a-b379-4bac-b5f4-93b92e6c8aa7" name="Changes" comment="added data augmentation (disabled due to worse results) + added training function" />
+    <list default="true" id="44c53d5a-b379-4bac-b5f4-93b92e6c8aa7" name="Changes" comment="reduced test size and valid size">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chatgpt_cnn_mnist.py" beforeDir="false" afterPath="$PROJECT_DIR$/chatgpt_cnn_mnist.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -170,7 +173,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740587761943</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="reduced test size and valid size">
+      <option name="closed" value="true" />
+      <created>1740588367928</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1740588367928</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -196,6 +207,7 @@
     <MESSAGE value="fix gpu not available on tf" />
     <MESSAGE value="added checkpoint to early stopping" />
     <MESSAGE value="added data augmentation (disabled due to worse results) + added training function" />
-    <option name="LAST_COMMIT_MESSAGE" value="added data augmentation (disabled due to worse results) + added training function" />
+    <MESSAGE value="reduced test size and valid size" />
+    <option name="LAST_COMMIT_MESSAGE" value="reduced test size and valid size" />
   </component>
 </project>
