@@ -133,6 +133,8 @@ class EarlyStopping:
         else:
             self.best_loss = val_loss
             self.counter = 0
+            torch.save(model.state_dict(), "./gpt_pytorch_model_weights")
+            print("Model saved")
 
 
 
