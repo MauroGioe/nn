@@ -4,7 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="44c53d5a-b379-4bac-b5f4-93b92e6c8aa7" name="Changes" comment="added data augmentation with dataset (it applies the transformation at each epoch instead of the previous approach where it was applied just once)">
+    <list default="true" id="44c53d5a-b379-4bac-b5f4-93b92e6c8aa7" name="Changes" comment="increased num epochs and setted no data augmentation as default (it leads to worse results and it slows down the training)">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/chatgpt_cnn_mnist.py" beforeDir="false" afterPath="$PROJECT_DIR$/chatgpt_cnn_mnist.py" afterDir="false" />
     </list>
@@ -189,7 +190,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740594222618</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="increased num epochs and setted no data augmentation as default (it leads to worse results and it slows down the training)">
+      <option name="closed" value="true" />
+      <created>1740595042177</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1740595042177</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -217,6 +226,7 @@
     <MESSAGE value="added data augmentation (disabled due to worse results) + added training function" />
     <MESSAGE value="reduced test size and valid size" />
     <MESSAGE value="added data augmentation with dataset (it applies the transformation at each epoch instead of the previous approach where it was applied just once)" />
-    <option name="LAST_COMMIT_MESSAGE" value="added data augmentation with dataset (it applies the transformation at each epoch instead of the previous approach where it was applied just once)" />
+    <MESSAGE value="increased num epochs and setted no data augmentation as default (it leads to worse results and it slows down the training)" />
+    <option name="LAST_COMMIT_MESSAGE" value="increased num epochs and setted no data augmentation as default (it leads to worse results and it slows down the training)" />
   </component>
 </project>

@@ -7,10 +7,11 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 import torch.nn.functional as F
 import numpy as np
+from torch.utils.tensorboard import SummaryWriter
+
+writer = SummaryWriter()
 torch.manual_seed(123)
 np.random.seed(123)
-
-
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
@@ -239,10 +240,14 @@ def training(num_epochs, model, train_loader, val_loader, criterion, optimizer):
         # Fase di allenamento
         train_loss, train_accuracy = train_one_epoch(model, train_loader, criterion, optimizer)
         print(f"Train Loss: {train_loss:.4f}, Train Accuracy: {train_accuracy:.2f}%")
-
+        writer.add_scalar("Loss/train", train_loss, epoch)
+        writer.add_scalar("Accuracy/train", train_accuracy, epoch)
         # Fase di validazione
         val_loss, val_accuracy = validate(model, val_loader, criterion)
         print(f"Validation Loss: {val_loss:.4f}, Validation Accuracy: {val_accuracy:.2f}%")
+        writer.add_scalar("Loss/validation", val_loss, epoch)
+        writer.add_scalar("Accuracy/validation", val_accuracy, epoch)
+
         scheduler.step(val_loss)
         early_stopping(val_loss, model)
         if early_stopping.early_stop:
@@ -250,7 +255,8 @@ def training(num_epochs, model, train_loader, val_loader, criterion, optimizer):
             break
 
 training(num_epochs, model, train_loader, val_loader, criterion, optimizer)
-
+writer.flush()
+writer.close()
 #torch.save(model.state_dict(), "./gpt_pytorch_model_weights")
 model.load_state_dict(torch.load("./gpt_pytorch_model_weights"))
 
