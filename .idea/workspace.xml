@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="44c53d5a-b379-4bac-b5f4-93b92e6c8aa7" name="Changes" comment="new nn on iris dataset + module for training in pytorch">
+    <list default="true" id="44c53d5a-b379-4bac-b5f4-93b92e6c8aa7" name="Changes" comment="switched log softmax to softmax in the activation of the output layer">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chatgpt_cnn_mnist.py" beforeDir="false" afterPath="$PROJECT_DIR$/chatgpt_cnn_mnist.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -212,7 +213,23 @@
       <option name="project" value="LOCAL" />
       <updated>1740856479273</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="switched log softmax to softmax in the activation of the output layer">
+      <option name="closed" value="true" />
+      <created>1741192068130</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1741192068130</updated>
+    </task>
+    <task id="LOCAL-00019" summary="switched log softmax to softmax in the activation of the output layer">
+      <option name="closed" value="true" />
+      <created>1741192115187</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1741192115187</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -243,6 +260,7 @@
     <MESSAGE value="increased num epochs and setted no data augmentation as default (it leads to worse results and it slows down the training)" />
     <MESSAGE value="added tensorboard logging" />
     <MESSAGE value="new nn on iris dataset + module for training in pytorch" />
-    <option name="LAST_COMMIT_MESSAGE" value="new nn on iris dataset + module for training in pytorch" />
+    <MESSAGE value="switched log softmax to softmax in the activation of the output layer" />
+    <option name="LAST_COMMIT_MESSAGE" value="switched log softmax to softmax in the activation of the output layer" />
   </component>
 </project>

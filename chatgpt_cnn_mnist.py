@@ -180,7 +180,7 @@ class EarlyStopping:
     def __call__(self, val_loss, model):
         if self.best_loss is None:
             self.best_loss = val_loss
-        elif val_loss > self.best_loss + self.min_delta:
+        elif val_loss >= self.best_loss + self.min_delta:
             self.counter += 1
             print(f"EarlyStopping counter: {self.counter}/{self.patience}")
             if self.counter >= self.patience:
@@ -231,7 +231,7 @@ optimizer = optim.Adam(model.parameters())
 
 scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2, verbose=True)
 # Numero di epoche di allenamento
-num_epochs = 100
+num_epochs = 50
 
 def training(num_epochs, model, train_loader, val_loader, criterion, optimizer):
     for epoch in range(num_epochs):
@@ -244,7 +244,7 @@ def training(num_epochs, model, train_loader, val_loader, criterion, optimizer):
         writer.add_scalar("Accuracy/train", train_accuracy, epoch)
         # Fase di validazione
         val_loss, val_accuracy = validate(model, val_loader, criterion)
-        print(f"Validation Loss: {val_loss:.4f}, Validation Accuracy: {val_accuracy:.2f}%")
+        print(f"Validation Loss: {val_loss:.5f}, Validation Accuracy: {val_accuracy:.2f}%")
         writer.add_scalar("Loss/validation", val_loss, epoch)
         writer.add_scalar("Accuracy/validation", val_accuracy, epoch)
 
