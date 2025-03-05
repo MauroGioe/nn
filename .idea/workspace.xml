@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="44c53d5a-b379-4bac-b5f4-93b92e6c8aa7" name="Changes" comment="added tensorboard logging">
-      <change afterPath="$PROJECT_DIR$/pytorch_iris.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="44c53d5a-b379-4bac-b5f4-93b92e6c8aa7" name="Changes" comment="new nn on iris dataset + module for training in pytorch">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -206,7 +204,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740840007844</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="new nn on iris dataset + module for training in pytorch">
+      <option name="closed" value="true" />
+      <created>1740856479273</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1740856479273</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -236,6 +242,7 @@
     <MESSAGE value="added data augmentation with dataset (it applies the transformation at each epoch instead of the previous approach where it was applied just once)" />
     <MESSAGE value="increased num epochs and setted no data augmentation as default (it leads to worse results and it slows down the training)" />
     <MESSAGE value="added tensorboard logging" />
-    <option name="LAST_COMMIT_MESSAGE" value="added tensorboard logging" />
+    <MESSAGE value="new nn on iris dataset + module for training in pytorch" />
+    <option name="LAST_COMMIT_MESSAGE" value="new nn on iris dataset + module for training in pytorch" />
   </component>
 </project>

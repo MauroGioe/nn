@@ -220,7 +220,7 @@ class CNN(nn.Module):
         x = F.relu(self.fc1(x))
         x = F.dropout(x, training=self.training)
         x = self.fc2(x)
-        return F.log_softmax(x, dim=1)
+        return F.softmax(x, dim=1)
 
 
 early_stopping = EarlyStopping(patience=3, min_delta=0.001)
@@ -231,7 +231,7 @@ optimizer = optim.Adam(model.parameters())
 
 scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2, verbose=True)
 # Numero di epoche di allenamento
-num_epochs = 30
+num_epochs = 100
 
 def training(num_epochs, model, train_loader, val_loader, criterion, optimizer):
     for epoch in range(num_epochs):
