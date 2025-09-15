@@ -261,7 +261,7 @@ writer.close()
 model.load_state_dict(torch.load("./gpt_pytorch_model_weights"))
 
 evaluate(model, test_loader)
-
+#99.167
 def predict(model, input_loader):
     with torch.no_grad():
         class_predictions = []
