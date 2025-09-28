@@ -169,6 +169,7 @@ def evaluate(model, test_loader):
 
 
 
+
 class EarlyStopping:
     def __init__(self, patience=5, min_delta=0):
         self.patience = patience  # Numero di epoche senza miglioramento
@@ -178,19 +179,16 @@ class EarlyStopping:
         self.early_stop = False  # Flag per fermare l'allenamento
 
     def __call__(self, val_loss, model):
-        if self.best_loss is None:
+        if self.best_loss is None or val_loss < self.best_loss - self.min_delta:
             self.best_loss = val_loss
-        elif val_loss >= self.best_loss + self.min_delta:
+            self.counter = 0
+            torch.save(model.state_dict(), "./lstm_pytorch_model_weights")
+            print("Model saved")
+        else :
             self.counter += 1
             print(f"EarlyStopping counter: {self.counter}/{self.patience}")
             if self.counter >= self.patience:
                 self.early_stop = True
-        else:
-            self.best_loss = val_loss
-            self.counter = 0
-            torch.save(model.state_dict(), "./gpt_pytorch_model_weights")
-            print("Model saved")
-
 
 
 # Definisci il modello (ad esempio, un semplice CNN)

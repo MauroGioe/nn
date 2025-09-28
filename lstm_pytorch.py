@@ -70,7 +70,7 @@ train_norm = train_norm[target]
 test_norm = test_norm[target]
 
 #set it to 1 to have only 1 prediction per sequence
-multi_steps = 4
+multi_steps = 1
 seq_len = 24
 batch_size = 32
 X_train, y_train = load_data(train_norm, seq_len = 24, multi_steps = multi_steps)
@@ -159,18 +159,16 @@ class EarlyStopping:
         self.early_stop = False  # Flag per fermare l'allenamento
 
     def __call__(self, val_loss, model):
-        if self.best_loss is None:
-            self.best_loss = val_loss
-        elif val_loss >= self.best_loss + self.min_delta:
-            self.counter += 1
-            print(f"EarlyStopping counter: {self.counter}/{self.patience}")
-            if self.counter >= self.patience:
-                self.early_stop = True
-        else:
+        if self.best_loss is None or val_loss < self.best_loss - self.min_delta:
             self.best_loss = val_loss
             self.counter = 0
             torch.save(model.state_dict(), "./lstm_pytorch_model_weights")
             print("Model saved")
+        else :
+            self.counter += 1
+            print(f"EarlyStopping counter: {self.counter}/{self.patience}")
+            if self.counter >= self.patience:
+                self.early_stop = True
 
 
 
@@ -197,7 +195,7 @@ class LSTM(nn.Module):
 
 
 
-early_stopping = EarlyStopping(patience=3, min_delta=0.001)
+early_stopping = EarlyStopping(patience=3, min_delta=0.0001)
 # Inizializza il modello, la loss function e l'ottimizzatore
 model = LSTM().to(device)
 criterion = nn.MSELoss()
@@ -227,6 +225,9 @@ def training(num_epochs, model, train_loader, val_loader, criterion, optimizer):
 training(num_epochs, model, train_loader, val_loader, criterion, optimizer)
 
 evaluate(model, test_loader)
+#RMSE 256
+#same value as tensorflow
+
 
 def predict(model, input_loader):
     with torch.no_grad():
@@ -238,7 +239,3 @@ def predict(model, input_loader):
         return preddictions
 
 y_pred = predict(model, test_loader)
-
-
-#RMSE 277
-#slightly higher than tensorflow
