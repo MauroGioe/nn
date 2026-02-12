@@ -10,9 +10,12 @@ from sklearn.metrics import r2_score
 #import matplotlib
 #matplotlib.use("Qt5Agg")
 import matplotlib.pyplot as plt
+import random
 
+random.seed(123)
 torch.manual_seed(123)
 np.random.seed(123)
+torch.cuda.manual_seed_all(123)
 train = pd.read_csv("./input/AEP_hourly_train.csv")
 test = pd.read_csv("./input/AEP_hourly_test.csv")
 target= "AEP_MW"
@@ -134,18 +137,19 @@ def validate(model, dataloader, criterion):
 
     avg_loss = running_loss / len(dataloader)
     return avg_loss
-
+import itertools
 def evaluate(model, test_loader):
     running_rmse = 0
+    squared_diff = []
     for x_test, y_test in test_loader:
         y_pred = model(x_test)
         y_test_original = scaler.inverse_transform(y_test.view(-1,multi_steps).cpu().detach().numpy())
         y_pred_original_scale = scaler.inverse_transform(y_pred.cpu().detach().numpy())
         diff = (y_pred_original_scale - y_test_original)
-        squared_diff = diff**2
-        test_rmse = np.sqrt( np.mean(squared_diff))
-        running_rmse += test_rmse
-    rmse = running_rmse / len(test_loader)
+        squared_diff_temp = diff**2
+        squared_diff.extend(squared_diff_temp)
+    rmse = np.sqrt(np.mean(squared_diff))
+    #rmse = running_rmse / len(test_loader)
     print("RMSE:{:.3f} ".format(rmse))
 
 
@@ -225,8 +229,7 @@ def training(num_epochs, model, train_loader, val_loader, criterion, optimizer):
 training(num_epochs, model, train_loader, val_loader, criterion, optimizer)
 
 evaluate(model, test_loader)
-#RMSE 256
-#same value as tensorflow
+#RMSE = 263
 
 
 def predict(model, input_loader):
@@ -239,3 +242,10 @@ def predict(model, input_loader):
         return preddictions
 
 y_pred = predict(model, test_loader)
+
+#evaluate
+y_pred = model(torch_X_test)
+y_test_original = scaler.inverse_transform(torch_y_test.view(-1, multi_steps).cpu().detach().numpy())
+y_pred_original_scale = scaler.inverse_transform(y_pred.cpu().detach().numpy())
+test_rmse = np.sqrt(mean_squared_error(y_test_original, y_pred_original_scale))
+#rmse = 263
